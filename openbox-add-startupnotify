@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Add startupnotify to every launcher in an Openbox menu.xml, in place,
+# then reconfigure the running Openbox session.
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+py="$script_dir/add_startupnotify.py"
+
+menu="${XDG_CONFIG_HOME:-$HOME/.config}/openbox/menu.xml"
+if [[ $# -gt 0 && -f "${1:-}" ]]; then
+    menu="$1"
+    shift
+fi
+
+if [[ ! -f "$menu" ]]; then
+    echo "error: menu file not found: $menu" >&2
+    echo "usage: $(basename "$0") [menu.xml] [--force] [--disable] [-v]" >&2
+    exit 1
+fi
+
+python3 "$py" "$menu" -i -v "$@"
+
+if command -v openbox >/dev/null 2>&1; then
+    openbox --reconfigure
+else
+    echo "warning: 'openbox' not found in PATH; skipping --reconfigure" >&2
+fi

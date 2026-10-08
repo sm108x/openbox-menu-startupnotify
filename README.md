@@ -29,6 +29,28 @@ for every `<action name="Execute">` in the file — nested submenus included.
 
 ## Usage
 
+The easiest way: run the wrapper. It edits `~/.config/openbox/menu.xml` in
+place (or the path you give it), then runs `openbox --reconfigure` for you.
+
+```sh
+./openbox-add-startupnotify
+```
+
+Pass a different menu file, and/or extra flags (`--force`, `--disable`,
+`-v`), as arguments — `-v` is already on by default:
+
+```sh
+./openbox-add-startupnotify ~/.config/openbox/menu.xml --force
+```
+
+Put it on your `PATH` (e.g. `ln -s "$PWD/openbox-add-startupnotify" ~/.local/bin/`)
+to run it as a plain command from anywhere.
+
+### Calling the Python script directly
+
+For more control (e.g. writing to a new file instead of in place, or piping
+to stdout), use `add_startupnotify.py` on its own:
+
 ```sh
 # print the result to stdout
 python3 add_startupnotify.py ~/.config/openbox/menu.xml
